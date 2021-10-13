@@ -1,5 +1,12 @@
 apply plugin: "com.android.application"
 
+project.ext.envConfigFiles = [
+    production: ".env",
+    staging: ".env.staging",
+]
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
 import com.android.build.OutputFile
 
 /**
@@ -136,6 +143,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        resValue "string", "build_config_package", "com.projectname"
+        flavorDimensions "default"
     }
     splits {
         abi {
@@ -152,6 +161,16 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+    }
+    productFlavors {
+      staging {
+        applicationId "com.projectname.staging"
+        resValue "string", "build_config_package", "com.projectname"
+      }
+      production {
+        applicationId "com.projectname"
+        resValue "string", "build_config_package", "com.projectname"
+      }
     }
     buildTypes {
         debug {
